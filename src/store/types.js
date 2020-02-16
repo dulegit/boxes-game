@@ -1,0 +1,2 @@
+// GETTERS
+export const IS_BACKDROP_ACTIVE = "shared/IS_BACKDROP_ACTIVE";
