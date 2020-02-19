@@ -3,30 +3,46 @@
     <h3 class="boxes-stats__title">Game Stats</h3>
     <ul class="boxes-stats__list">
       <li class="boxes-stats__item">
-        <span>Timer</span>
-        <strong>12 seconds</strong>
+        <span>Timer:</span>
+        <strong v-show="isGameStarted">{{getTimer}} seconds</strong>
       </li>
       <li class="boxes-stats__item">
-        <span>Left to click</span>
-        <strong>11</strong>
+        <span>Left to click:</span>
+        <strong v-show="isGameStarted">{{getClicksLeft}}</strong>
       </li>
       <li class="boxes-stats__item">
-        <span>Lives</span>
-        <strong>10</strong>
+        <span>Lives:</span>
+        <strong v-show="isGameStarted">{{getLives}}</strong>
       </li>
       <li class="boxes-stats__item">
-        <span>Level</span>
-        <strong>11</strong>
+        <span>Level:</span>
+        <strong v-show="isGameStarted">{{getLevel}}</strong>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import {mapGetters} from "vuex"
+import * as types from "@/store/types"
+
 export default {
-  name: "BoxesStats"
+  name: "BoxesStats",
+  computed: {
+    ...mapGetters({
+      isGameStarted: types.IS_GAME_START,
+      getTimer: types.GET_TIMER,
+      getClicksLeft: types.GET_CLICKS_LEFT,
+      getLives: types.GET_LIVES,
+      getLevel: types.GET_LEVEL
+    })
+  },
+  methods: {
+    
+  }
 }
 </script>
+
 <style scoped lang="scss">
 @import "./src/assets/scss/01_helpers/variables";
 @import "./src/assets/scss/01_helpers/mixins";
@@ -53,6 +69,10 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+  & span {
+    display: inline-flex;
+    margin-right: 0.25rem;
   }
 }
 .boxes-stats__item {
