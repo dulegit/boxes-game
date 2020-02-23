@@ -4,19 +4,19 @@
     <ul class="boxes-stats__list">
       <li class="boxes-stats__item">
         <span>Timer:</span>
-        <strong v-show="isGameStarted">{{getTimer}} seconds</strong>
+        <strong class="boxes-stats__value">{{getTimer}} s</strong>
       </li>
       <li class="boxes-stats__item">
         <span>Left to click:</span>
-        <strong v-show="isGameStarted">{{getClicksLeft}}</strong>
+        <strong class="boxes-stats__value">{{getClicksLeft}}</strong>
       </li>
       <li class="boxes-stats__item">
         <span>Lives:</span>
-        <strong v-show="isGameStarted">{{getLives}}</strong>
+        <strong class="boxes-stats__value">{{getLives}}</strong>
       </li>
       <li class="boxes-stats__item">
         <span>Level:</span>
-        <strong v-show="isGameStarted">{{getLevel}}</strong>
+        <strong class="boxes-stats__value">{{getLevel}}</strong>
       </li>
     </ul>
   </div>
@@ -78,5 +78,8 @@ export default {
 .boxes-stats__item {
   display: flex;
   justify-content: center;
+}
+.boxes-stats__value {
+  color: $boxActive;
 }
 </style>

@@ -15,8 +15,12 @@ export default new Vuex.Store({
     [types.IS_BACKDROP_ACTIVE]: state => state.backdrop
   },
   mutations: {
+    [types.SET_BACKDROP_MODAL]: state => state.backdrop = !state.backdrop
   },
   actions: {
+    [types.TOGGLE_BACKDROP_MODAL]: ({commit}) => {
+      commit(types.SET_BACKDROP_MODAL)
+    }
   },
   modules: {
     boxesBoard,
