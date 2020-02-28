@@ -3,18 +3,26 @@
     <div class="boxes-board__row"
       v-for="(row, i) in 10"
       :key="row.i">
-      <div class="boxes-board__box"
+
+      <BoxesBoardBox
         v-for="(box, n) in 10"
-        :key="box.n"
-        @click="onBoxClick(i, n)">
-      </div>
+        :key="Number(i+''+n)"
+        :keyArray="[i, n]"
+        :boxIndex="Number(i+''+n)"
+        v-on:boxClicked="onBoxClick" />
+
     </div>
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex"
+import lockr from "lockr"
 import * as types from "@/store/types"
+import * as typeBoxesBoard from "@/store/types/boxesBoard"
+import * as typeBoxesStats from "@/store/types/boxesStats"
+
+import BoxesBoardBox from "@/components/BoxesBoardBox.vue"
 
 export default {
   name: "BoxesBoard",
@@ -22,31 +30,39 @@ export default {
     return {
       timerId: null,
       levelGenerated: [],
-      randomItem: []
+      randomItem: [],
     }
   },
-  components: {},
+  components: {
+    BoxesBoardBox
+  },
   props: {},
   computed: {
     ...mapGetters({
-      isGameStarted: types.IS_GAME_START,
-      isNewLevelStarted: types.GET_IS_NEW_LEVEL_START,
-      isModalActive: types.IS_BACKDROP_ACTIVE,
-      getGeneratedMoves: types.GET_LEVEL_GENERATED_ARRAY,
-      getPossibleMoves: types.GET_POSSIBLE_MOVES_ARRAY,
-      getLevel: types.GET_LEVEL,
-      getTimer: types.GET_TIMER
+      isGameStarted: typeBoxesBoard.IS_GAME_START,
+      isNewLevelStarted: typeBoxesBoard.GET_IS_NEW_LEVEL_START,
+      getPossibleMoves: typeBoxesBoard.GET_POSSIBLE_MOVES_ARRAY,
+      getPossibleNextMoves: typeBoxesBoard.GET_POSSIBLE_NEXT_MOVES_ARRAY,
+      getLevel: typeBoxesStats.GET_LEVEL
     })
   },
   mounted() {
-    if (localStorage.getItem("lastLevel") != null && localStorage.getItem("lastLives") != null) {
-        let localLevel = JSON.parse(localStorage.getItem("lastLevel"))
-        let localLives = JSON.parse(localStorage.getItem("lastLives"))
-        this.onAddLocalStorageData({level: localLevel, lives: localLives})
+    let localLevel = lockr.get("lastLevel")
+    let localLives = lockr.get("lastLives")
+    if ((localLevel !== undefined && localLevel !== 0) && localLives !== undefined) {
+      if (localLevel === 1 ) {
+        return
+      }
+      this.onToggleBackdrop()
+      this.onAddLocalStorageData({level: localLevel, lives: localLives})
     }
   },
   methods: {
-    onBoxClick(x, y) {
+    onBoxClick(position) {
+      let x = position[0]
+      let y = position[1]
+      this.onAddBoardRef(this.$refs.board);
+
       if (this.isNewLevelStarted && !this.isGameStarted) {
         this.levelGenerated = []
         this.randomItem = []
@@ -66,23 +82,21 @@ export default {
         this.onAddBoxesState({pos: [x,y]})
         // depend on clicked boxes calculate possible next moves
         this.onAddPossibleMoves({pos: [x,y]})
-        // add appropriate classes to boxes
-        this.onClassesGenerated()
-        // disable boxes which are not in generated level
-        this.onDisableOtherBoxes()
         // start timer
         this.timerId = setInterval(() => {
-          this.onTimerStart()
+            this.onTimerStart()
         }, 1000)
         // calculate remaining clicks
         this.onAddRemainingClicks()
       } else {
+        
+        if (!this.checkIsPossibleToMove(x,y)) {
+          return
+        }
         // add clicked boxes in level in array
         this.onAddBoxesState({pos: [x,y]})
         // depend on clicked boxes calculate possible next moves
         this.onAddPossibleMoves({pos: [x,y]})
-        // add appropriate classes to boxes
-        this.onClassesGenerated()
         // calculate remaining clicks
         this.onAddRemainingClicks()
         // check if is game over
@@ -93,7 +107,7 @@ export default {
     setPossibleMoves(x, y) {
 
       const gameBoard = document.getElementsByClassName('boxes-board')[0].children;
-      if (this.levelGenerated.length == 0) {
+      if (this.levelGenerated.length === 0) {
         this.levelGenerated.push([x, y])
       }
       // array of possible moves
@@ -123,7 +137,7 @@ export default {
       let randomItemLoc = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
       this.randomItem = randomItemLoc
 
-      if (this.levelGenerated.length == 1) {
+      if (this.levelGenerated.length === 1) {
         this.levelGenerated = [...this.levelGenerated, this.randomItem]
         this.checkGeneratedMoves()
 
@@ -132,7 +146,7 @@ export default {
         isDuplicated = this.levelGenerated.some((item) => {
           let randomBox = JSON.stringify(this.randomItem)
           let itemToCheck = JSON.stringify(item)
-          if(randomBox == itemToCheck) {
+          if(randomBox === itemToCheck) {
             return item
           }
         })
@@ -153,26 +167,32 @@ export default {
         this.setNextMove(this.getPossibleMoves)
       } else {
         this.onAddLevelGenerated(this.levelGenerated)
-        console.log('level created!!!')
       }
     },
+    checkIsPossibleToMove(x, y) {
+      let isPossibleMove = this.getPossibleNextMoves.filter((box) => {
+        let boxStr = box[0] + '' + box[1];
+        let clickedStr = x + '' + y;
+        return boxStr === clickedStr
+      })
+      return isPossibleMove.length === 0 ? false : true
+    },
     ...mapActions({
-      onGameStart: types.ADD_NEW_GAME,
-      onAddBoxesState: types.ADD_BOXES_STATE,
-      onClassesGenerated: types.ADD_BOXES_CLASSES,
-      onAddPossibleMoves: types.ADD_POSSIBLE_MOVES,
-      onDisableOtherBoxes: types.REMOVE_BOXES_NOT_IN_PLAY,
-      onTimerStart: types.ADD_TIMER_COUNTING,
-      onTimerRemove: types.REMOVE_TIMER_COUNTING,
-      onAddLevelGenerated: types.ADD_LEVEL_GENERATED_ARRAY,
-      onAddPossibleMovesArray: types.ADD_POSSIBLE_MOVES_ARRAY,
-      onAddRemainingClicks: types.ADD_REMAINING_CLICKS,
-      onAddIsGameOver: types.ADD_IS_LEVEL_FINISHED,
-      onAddLocalStorageData: types.ADD_LOCALSTORAGE_DATA
+      onGameStart: typeBoxesBoard.ADD_NEW_GAME,
+      onAddBoardRef: typeBoxesBoard.ADD_BOARD_REF,
+      onAddBoxesState: typeBoxesBoard.ADD_BOXES_STATE,
+      onAddPossibleMoves: typeBoxesBoard.ADD_POSSIBLE_MOVES,
+      onTimerStart: typeBoxesStats.ADD_TIMER_COUNTING,
+      onTimerRemove: typeBoxesStats.REMOVE_TIMER_COUNTING,
+      onAddLevelGenerated: typeBoxesBoard.ADD_LEVEL_GENERATED_ARRAY,
+      onAddPossibleMovesArray: typeBoxesBoard.ADD_POSSIBLE_MOVES_ARRAY,
+      onAddRemainingClicks: typeBoxesStats.ADD_REMAINING_CLICKS,
+      onAddIsGameOver: typeBoxesBoard.ADD_IS_LEVEL_FINISHED,
+      onAddLocalStorageData: typeBoxesStats.ADD_LOCALSTORAGE_DATA,
+      onToggleBackdrop: types.TOGGLE_BACKDROP_MODAL,
     })
   },
   beforeDestroy() {
-    console.log('BEFORE DESTROY/BoxesBoard')
     this.onTimerRemove();
     clearInterval(this.timerId)
   }
@@ -208,17 +228,24 @@ export default {
     max-width: 4rem;
     height: 4rem;
   }
-  &.active,
-  &:hover {
+  &.active {
     background-color: $boxActive;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &:hover {
+    cursor: default
   }
   &.done {
     background-color: $box;
-    pointer-events: none;
+    cursor: default
+    // pointer-events: none;
   }
   &.incoming {
     background-color: $success;
-    pointer-events: none;
+    cursor: default
+    // pointer-events: none;
   }
 }
 </style>

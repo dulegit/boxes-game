@@ -1,0 +1,29 @@
+// GETTERS
+export const IS_GAME_START = "boxesBoard/IS_GAME_START"
+export const GET_IS_NEW_LEVEL_START = "boxesBoard/GET_IS_NEW_LEVEL_START"
+export const GET_LEVEL_GENERATED_ARRAY = "boxesBoard/GET_LEVEL_GENERATED_ARRAY"
+export const GET_POSSIBLE_MOVES_ARRAY = "boxesBoard/GET_POSSIBLE_MOVES_ARRAY"
+export const GET_POSSIBLE_NEXT_MOVES_ARRAY = "boxesBoard/GET_POSSIBLE_NEXT_MOVES_ARRAY"
+export const GET_CLICKED_BOXES = "boxesBoard/GET_CLICKED_BOXES"
+
+// MUTATIONS
+export const SET_GAME_START = "boxesBoard/SET_GAME_START"
+export const SET_BOARD_REF = "boxesBoard/SET_BOARD_REF"
+export const SET_BOXES_STATE = "boxesBoard/SET_BOXES_STATE"
+export const SET_POSSIBLE_MOVES = "boxesBoard/SET_POSSIBLE_MOVES"
+export const SET_BOXES_CLASSES = "boxesBoard/SET_BOXES_CLASSES"
+export const DISABLE_BOXES = "boxesBoard/DISABLE_BOXES"
+export const SET_LEVEL_GENERATED_ARRAY = "boxesBoard/SET_LEVEL_GENERATED_ARRAY"
+export const SET_POSSIBLE_MOVES_ARRAY = "boxesBoard/SET_POSSIBLE_MOVES_ARRAY"
+export const SET_IS_LEVEL_FINISHED = "boxesBoard/SET_IS_LEVEL_FINISHED"
+export const SET_NEW_LEVEL_RESET_STATE = "boxesBoard/SET_NEW_LEVEL_RESET_STATE"
+
+// ACTIONS
+export const ADD_NEW_GAME = "boxesBoard/ADD_NEW_GAME"
+export const ADD_BOARD_REF = "boxesBoard/ADD_BOARD_REF"
+export const ADD_BOXES_STATE = "boxesBoard/ADD_BOXES_STATE"
+export const ADD_POSSIBLE_MOVES = "boxesBoard/ADD_POSSIBLE_MOVES"
+export const ADD_LEVEL_GENERATED_ARRAY = "boxesBoard/ADD_LEVEL_GENERATED_ARRAY"
+export const ADD_POSSIBLE_MOVES_ARRAY = "boxesBoard/ADD_POSSIBLE_MOVES_ARRAY"
+export const ADD_IS_LEVEL_FINISHED = "boxesBoard/ADD_IS_LEVEL_FINISHED"
+export const ADD_NEW_LEVEL_RESET_STATE = "boxesBoard/ADD_NEW_LEVEL_RESET_STATE"

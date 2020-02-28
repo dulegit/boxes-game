@@ -1,15 +1,25 @@
 <template>
   <div class="modal">
     <div class="modal__inner">
-      <slot name="nextLevel" />
+      <slot v-if="isGameStarted" name="nextLevel" />
+      <slot v-if="!isGameStarted && !isNewLevelStarted" name="chooseLevel" />
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters} from "vuex"
+import * as typeBoxesBoard from "@/store/types/boxesBoard"
+
 export default {
   name: "AppModal",
-  props: {}
+  props: {},
+  computed: {
+    ...mapGetters({
+      isGameStarted: typeBoxesBoard.IS_GAME_START,
+      isNewLevelStarted: typeBoxesBoard.GET_IS_NEW_LEVEL_START
+    }),
+  }
 }
 </script>
 
@@ -32,6 +42,8 @@ export default {
     position: relative;
     text-align: center;
     padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     max-width: 20rem;
     min-height: 7.5rem;
@@ -41,7 +53,27 @@ export default {
   }
   .modal__head {
     font-size: 1.25rem;
+    margin-bottom: .5rem;
     font-weight: bold;
+  }
+  .modal__input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: .5rem;
+    background-color: rgba(237, 215, 194, 0.2);
+    border-bottom: 1px solid $box;
+    text-align: center;
+  }
+  .modal__text {
+    &--info {
+      display: inline-block;
+      padding: .5rem;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: $primary;
+      background-color: $secondaryLight;
+      border-radius: .25rem;
+    }
   }
   .modal__cta {
     display: flex;
@@ -64,5 +96,10 @@ export default {
     padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
+    &:disabled {
+      background-color: $secondaryLight;
+      color: $box;
+      cursor: not-allowed;
+    }
   }
 </style>

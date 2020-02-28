@@ -24,17 +24,18 @@
 
 <script>
 import {mapGetters} from "vuex"
-import * as types from "@/store/types"
+import * as typeBoxesBoard from "@/store/types/boxesBoard"
+import * as typeBoxesStats from "@/store/types/boxesStats"
 
 export default {
   name: "BoxesStats",
   computed: {
     ...mapGetters({
-      isGameStarted: types.IS_GAME_START,
-      getTimer: types.GET_TIMER,
-      getClicksLeft: types.GET_CLICKS_LEFT,
-      getLives: types.GET_LIVES,
-      getLevel: types.GET_LEVEL
+      isGameStarted: typeBoxesBoard.IS_GAME_START,
+      getTimer: typeBoxesStats.GET_TIMER,
+      getClicksLeft: typeBoxesStats.GET_CLICKS_LEFT,
+      getLives: typeBoxesStats.GET_LIVES,
+      getLevel: typeBoxesStats.GET_LEVEL
     })
   },
   methods: {
