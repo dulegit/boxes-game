@@ -31,7 +31,7 @@ export default {
   name: "BoxesStats",
   computed: {
     ...mapGetters({
-      isGameStarted: typeBoxesBoard.IS_GAME_START,
+      isGameStarted: typeBoxesBoard.GET_IS_GAME_START,
       getTimer: typeBoxesStats.GET_TIMER,
       getClicksLeft: typeBoxesStats.GET_CLICKS_LEFT,
       getLives: typeBoxesStats.GET_LIVES,

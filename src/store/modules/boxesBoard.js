@@ -4,6 +4,7 @@ const stateDefault = () => {
   return {
     gameStart: false,
     newLevelStart: false,
+    gameOver: false,
     board: {
       ref: null,
       clickedBoxes: [],
@@ -17,8 +18,9 @@ const stateDefault = () => {
 const state = stateDefault()
 
 const getters = {
-  [typeBoxesBoard.IS_GAME_START]: state => state.gameStart,
+  [typeBoxesBoard.GET_IS_GAME_START]: state => state.gameStart,
   [typeBoxesBoard.GET_IS_NEW_LEVEL_START]: state => state.newLevelStart,
+  [typeBoxesBoard.GET_IS_GAME_OVER]: state => state.gameOver,
   [typeBoxesBoard.GET_LEVEL_GENERATED_ARRAY]: state => state.board.levelGenerated,
   [typeBoxesBoard.GET_POSSIBLE_MOVES_ARRAY]: state => state.board.possibleMoves,
   [typeBoxesBoard.GET_POSSIBLE_NEXT_MOVES_ARRAY]: state => state.board.possibleNextMoves,
@@ -27,6 +29,8 @@ const getters = {
 
 const mutations = {
   [typeBoxesBoard.SET_GAME_START]: state => state.gameStart = true,
+
+  [typeBoxesBoard.SET_GAME_OVER]: (state, payload) => state.gameOver = payload,
 
   [typeBoxesBoard.SET_BOARD_REF]: (state, payload) => state.board.ref = payload,
 
@@ -81,10 +85,15 @@ const mutations = {
 
   [typeBoxesBoard.SET_IS_LEVEL_FINISHED]: (state, payload) => {
     let clicksLeft = payload.rootState.boxesStats.clicksLeft;
+    let livesLeft = payload.rootState.boxesStats.lives;
     let posibleMoves = state.board.possibleNextMoves
 
     if (clicksLeft !== 0 && posibleMoves.length === 0) {
-      alert("GAME OVER!")
+      // console.log("GAME OVER!")
+      state.gameOver = true;
+      payload.rootState.boxesStats.lives = livesLeft - clicksLeft;
+      livesLeft <= 0 ? livesLeft = 1 : livesLeft
+      payload.rootState.backdrop = true
       clearInterval(payload.payload.interval)
     }
 
@@ -98,6 +107,7 @@ const mutations = {
   [typeBoxesBoard.SET_NEW_LEVEL_RESET_STATE]: (state, payload) => {
     Object.assign(state, stateDefault())
     payload.newLevel === true ? state.newLevelStart = true : null
+    payload.gameOver === true ? state.gameOver = true : null
   }
 
 }
@@ -105,6 +115,9 @@ const mutations = {
 const actions = {
   [typeBoxesBoard.ADD_NEW_GAME]: ({commit}) => {
     commit(typeBoxesBoard.SET_GAME_START)
+  },
+  [typeBoxesBoard.ADD_GAME_OVER]: ({commit}, payload) => {
+    commit(typeBoxesBoard.SET_GAME_OVER, payload)
   },
   [typeBoxesBoard.ADD_BOARD_REF]: ({commit}, payload) => {
     commit(typeBoxesBoard.SET_BOARD_REF, payload)

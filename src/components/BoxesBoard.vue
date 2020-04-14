@@ -39,7 +39,8 @@ export default {
   props: {},
   computed: {
     ...mapGetters({
-      isGameStarted: typeBoxesBoard.IS_GAME_START,
+      isGameStarted: typeBoxesBoard.GET_IS_GAME_START,
+      isGameOver: typeBoxesBoard.GET_IS_GAME_OVER,
       isNewLevelStarted: typeBoxesBoard.GET_IS_NEW_LEVEL_START,
       getPossibleMoves: typeBoxesBoard.GET_POSSIBLE_MOVES_ARRAY,
       getPossibleNextMoves: typeBoxesBoard.GET_POSSIBLE_NEXT_MOVES_ARRAY,
@@ -61,14 +62,14 @@ export default {
     onBoxClick(position) {
       let x = position[0]
       let y = position[1]
-      this.onAddBoardRef(this.$refs.board);
-
-      if (this.isNewLevelStarted && !this.isGameStarted) {
+      this.onAddBoardRef(this.$refs.board)
+      if ((this.isNewLevelStarted && !this.isGameStarted) || this.isGameOver) {
         this.levelGenerated = []
         this.randomItem = []
         this.timerId = null
         this.onTimerRemove();
         clearInterval(this.timerId)
+        this.onaddGameOver(false)
       }
       // const boardRef = this.$refs.board;
       if (!this.isGameStarted) {
@@ -179,6 +180,7 @@ export default {
     },
     ...mapActions({
       onGameStart: typeBoxesBoard.ADD_NEW_GAME,
+      onaddGameOver: typeBoxesBoard.ADD_GAME_OVER,
       onAddBoardRef: typeBoxesBoard.ADD_BOARD_REF,
       onAddBoxesState: typeBoxesBoard.ADD_BOXES_STATE,
       onAddPossibleMoves: typeBoxesBoard.ADD_POSSIBLE_MOVES,

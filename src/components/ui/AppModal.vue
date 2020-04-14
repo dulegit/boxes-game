@@ -1,8 +1,10 @@
 <template>
   <div class="modal">
     <div class="modal__inner">
-      <slot v-if="isGameStarted" name="nextLevel" />
-      <slot v-if="!isGameStarted && !isNewLevelStarted" name="chooseLevel" />
+      <slot v-if="isGameStarted && !isGameOver && getLives >= 0" name="nextLevel" />
+      <slot v-if="!isGameStarted && !isNewLevelStarted && getLives >= 0" name="chooseLevel" />
+      <slot v-if="isGameStarted && isGameOver && getLives >= 0" name="gameOver" />
+      <slot v-if="getLives <= 0" name="noLivesLeft" />
     </div>
   </div>
 </template>
@@ -10,14 +12,17 @@
 <script>
 import { mapGetters} from "vuex"
 import * as typeBoxesBoard from "@/store/types/boxesBoard"
+import * as typeBoxesStats from "@/store/types/boxesStats"
 
 export default {
   name: "AppModal",
   props: {},
   computed: {
     ...mapGetters({
-      isGameStarted: typeBoxesBoard.IS_GAME_START,
-      isNewLevelStarted: typeBoxesBoard.GET_IS_NEW_LEVEL_START
+      isGameStarted: typeBoxesBoard.GET_IS_GAME_START,
+      isNewLevelStarted: typeBoxesBoard.GET_IS_NEW_LEVEL_START,
+      isGameOver: typeBoxesBoard.GET_IS_GAME_OVER,
+      getLives: typeBoxesStats.GET_LIVES
     }),
   }
 }
@@ -55,6 +60,9 @@ export default {
     font-size: 1.25rem;
     margin-bottom: .5rem;
     font-weight: bold;
+    &.modal__head--alert {
+      color: $warning;
+    }
   }
   .modal__input {
     padding: 0.5rem;
@@ -100,6 +108,12 @@ export default {
       background-color: $secondaryLight;
       color: $box;
       cursor: not-allowed;
+    }
+    &.modal__button--cancel {
+      background-color: $warning;
+    }
+    &.modal__button--accept {
+      background-color: $success
     }
   }
 </style>
