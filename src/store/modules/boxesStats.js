@@ -21,6 +21,7 @@ const mutations = {
     let clickedBoxes = rootState.boxesBoard.board.clickedBoxes.length
     state.clicksLeft = state.level - (clickedBoxes - 1)
   },
+  [typeBoxesStats.RESET_CLICKS]: state => state.clicksLeft = 0,
   [typeBoxesStats.SET_NEW_LEVEL_UPDATE_STATE]: (state) => {
     state.timer = 0
     state.level = state.level + 1;
@@ -41,6 +42,9 @@ const actions = {
   },
   [typeBoxesStats.ADD_REMAINING_CLICKS]: ({commit, rootState}) => {
     commit(typeBoxesStats.SET_REMAINING_CLICKS, rootState)
+  },
+  [typeBoxesStats.ADD_CLICKS_RESET]: ({commit}) => {
+    commit(typeBoxesStats.RESET_CLICKS)
   },
   [typeBoxesStats.ADD_NEW_LEVEL_UPDATE_STATE]: ({commit}) => {
     commit(typeBoxesStats.SET_NEW_LEVEL_UPDATE_STATE)

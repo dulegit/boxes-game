@@ -99,6 +99,8 @@ export default {
       onAddNewLevelResetBoxesBoard: typeBoxesBoard.ADD_NEW_LEVEL_RESET_STATE,
       onAddNewLevelUpdateStats: typeBoxesStats.ADD_NEW_LEVEL_UPDATE_STATE,
       onAddLocalStorageData: typeBoxesStats.ADD_LOCALSTORAGE_DATA,
+      onTimerRemove: typeBoxesStats.REMOVE_TIMER_COUNTING,
+      onAddClicksReset: typeBoxesStats.ADD_CLICKS_RESET
     }),
     filterNumbers(evt) {
       var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -141,6 +143,8 @@ export default {
       this.onToggleBackdrop()
       this.onAddLocalStorageData({level: lockr.get("lastLevel"), lives: lockr.get("lastLives")})
       this.onAddNewLevelResetBoxesBoard({newLevel: false, gameOver: true})
+      this.onTimerRemove()
+      this.onAddClicksReset()
     },
     startGameFromStart() {
       lockr.set("lastLevel", 1)

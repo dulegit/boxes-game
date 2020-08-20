@@ -1,9 +1,9 @@
 <template>
   <div class="modal">
     <div class="modal__inner">
-      <slot v-if="isGameStarted && !isGameOver && getLives >= 0" name="nextLevel" />
-      <slot v-if="!isGameStarted && !isNewLevelStarted && getLives >= 0" name="chooseLevel" />
-      <slot v-if="isGameStarted && isGameOver && getLives >= 0" name="gameOver" />
+      <slot v-if="isGameStarted && !isGameOver && getLives > 0" name="nextLevel" />
+      <slot v-if="!isGameStarted && !isNewLevelStarted && getLives > 0" name="chooseLevel" />
+      <slot v-if="isGameStarted && isGameOver && getLives > 0" name="gameOver" />
       <slot v-if="getLives <= 0" name="noLivesLeft" />
     </div>
   </div>

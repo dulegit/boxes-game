@@ -213,15 +213,26 @@ export default {
 }
 .boxes-board__row {
   display: grid;
-  grid-template-columns: repeat(10, 1fr)
+  grid-template-columns: repeat(10, 1fr);
+  &:last-child {
+    & .boxes-board__box {
+      border-bottom: none;
+    }
+  }
 }
 .boxes-board__box {
+  position: relative;
   width: 100%;
   max-width: 5rem;
   height: 3.5rem;
   background-color: $primaryLight;
-  border: 1px solid $box;
+  border-right: rgba($color: $box, $alpha: 0.5) solid 1px;
+  border-bottom: rgba($color: $box, $alpha: 0.5) solid 1px;
   cursor: pointer;
+
+  &:last-child {
+    border-right: none;
+  }
   @include breakpoint(x-small) {
     max-width: 5rem;
     height: 3.5rem;
@@ -241,13 +252,11 @@ export default {
   }
   &.done {
     background-color: $box;
-    cursor: default
-    // pointer-events: none;
+    cursor: default;
   }
   &.incoming {
     background-color: $success;
-    cursor: default
-    // pointer-events: none;
+    cursor: default;
   }
 }
 </style>
